@@ -66,22 +66,6 @@ class PetrosoftCandidate
      * @return array          Массив из двух элементов. Первый — индекс первого элемента
      *                        самой длинной группы, второй — ее длина.
      */
-//На входном наборе значений [6,8,5,7,18,21,19,16,19,17] был получен результат [4,5], хотя ожидалось [0,4].
-//На входном наборе значений [5,4,1,4,3,2,8] был получен результат [0,6], хотя ожидалось [2,4].
-    private function isArrayFluent($arr)
-    {
-        sort($arr);
-        $count = count($arr);
-
-        for ($i = 0; $i < $count; $i++) {
-            if ($i > 0 && $arr[$i - 1] + 1 != $arr[$i]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function task2($list)
     {
         if (!$list) {
@@ -105,37 +89,40 @@ class PetrosoftCandidate
                 }
             }
         }
-        var_dump($parts);
-//        $items = $list;
-//        sort($items);
-//
-//        $group_num = 0;
-//        $parts = array();
-//
-//        foreach ($items as $k => $item) {
-//            if ($k != 0 && ($item > $items[$k - 1] + 1 || $item < $items[$k - 1] - 1)) {
-//                $group_num++;
-//            }
-//            $parts[$group_num][] = $item;
-//        }
-//
-        $max_part = $parts[0];
+
+        $max_part = array();
         $max_part_pos = 0;
         $part_pos = 0;
 
         foreach ($parts as $part) {
-            if (is_null($max_part) || count($max_part) < count($part)) {
+            if (!$max_part || count($max_part) < count($part)) {
                 $max_part = $part;
                 $max_part_pos = $part_pos;
             }
             $part_pos += count($part);
         }
-//
-//        foreach ($list as $k => $value) {
-//            if (in_array($value, $max_part)) {
-//                return array($k, count($max_part));
-//            }
-//        }
+
+        return array($max_part_pos, count($max_part));
+    }
+
+    /**
+     * Проверка массива на непрерывность несортированного числового ряда
+     *
+     * @param array $arr
+     * @return boolean
+     */
+    private function isArrayFluent($arr)
+    {
+        sort($arr);
+        $count = count($arr);
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($i > 0 && $arr[$i - 1] + 1 != $arr[$i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -257,10 +244,3 @@ class PetrosoftCandidate
     }
 
 }
-
-// делал без учета возможности повторения цифр
-$o = new PetrosoftCandidate();
-//var_dump($o->task2([6, 8, 5, 7, 18, 21, 19, 16, 19, 17]));
-var_dump($o->task2([5, 4, 1, 4, 3, 2, 8]));
-//
-//var_dump($o->isFluent([1,2,3,4,5,10,9,8,7,6,15]));
